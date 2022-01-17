@@ -4,7 +4,7 @@ import top_crypto_price_checker as crypto
 
 
 def read_token():
-    with open('token.txt', 'r') as f:
+    with open('./Crypto_Bot/token.txt', 'r') as f:
         lines = f.readlines()
         return lines[0].strip()
 
@@ -34,11 +34,15 @@ async def on_message(message):
         return
     elif user_message.lower() == "!random":
         random_crypto = crypto.random_crypto()
-        await message.channel.send(f"""
-        {str(random_crypto)}
-        """)
+        await message.channel.send(f"{random_crypto}")
         return
     elif user_message.lower() == "!price":
         await message.channel.send("If the displayed price is $0.00, this means the price is less than $0.00. for example: $0.000273. ")
+        return
+    elif message.content.find("top crypto") != -1:
+        top_crypto = crypto.top_crypto()
+        await message.channel.send(f"{top_crypto}")
+        return
+
 
 client.run(TOKEN)
