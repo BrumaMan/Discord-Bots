@@ -2,7 +2,14 @@ from tokenize import Token
 import discord
 import top_crypto_price_checker as crypto
 
-TOKEN = 'OTMyNjc2MTM3NDAwODAzMzI5.YeWcVw.9HjjDAgxPGvLH2PHjWvo7RU0BsI'
+
+def read_token():
+    with open('token.txt', 'r') as f:
+        lines = f.readlines()
+        return lines[0].strip()
+
+
+TOKEN = read_token()
 
 client = discord.Client()
 
