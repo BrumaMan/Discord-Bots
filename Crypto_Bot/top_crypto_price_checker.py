@@ -135,5 +135,22 @@ def random_crypto():
                 return f"Name: {coin_name} ({coin_initial}). Price: {coin_price}"
 
 
-# rand = random_crypto()
+def top_crypto():
+    for tr in trs[:10]:
+        name, price = tr.contents[2:4]
+        market_cap = tr.contents[6]
+        coin_initial = str(name).split("class")[9].split(">")[1][:-3]
+        coin_name = name.p.string
+        coin_price = price.span.string
+        coin_market_cap = str(market_cap).split(">")[3][:-6]
+        # print(f"---{coin_initial}---")
+        # print(f"Name: {coin_name}")
+        # print(f"Price: {coin_price}")
+        # print(f"Market cap: {coin_market_cap}")
+        # print()
+
+        return f"Name: {coin_name} ({coin_initial}). Price: {coin_price}. Market cap: {coin_market_cap}"
+
+
+# rand = top_crypto()
 # print(rand)
