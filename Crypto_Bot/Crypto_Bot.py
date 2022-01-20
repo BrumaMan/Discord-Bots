@@ -97,18 +97,22 @@ async def on_message(message):
                 doc = BeautifulSoup(result, "html.parser")
                 print(crypto_name)
 
+                symbol = doc.find(class_="sc-16r8icm-0 gpRPnR nameHeader")
                 name = doc.find(class_="sc-1q9q90x-0 jCInrl h1")
-                symbol = str(name).split(">")[2][:-7]
+                initial = str(name).split(">")[2][:-7]
                 price = doc.find(class_="priceValue")
                 market = doc.find(class_="statsValue")
+                coin_image = str(symbol).split(">")[1].split('"')[5]
                 coin_name = str(name).split(">")[1].split("<")[0]
                 coin_price = str(price).split("span")[1][1:-2]
                 market_cap = str(market).split(">")[1][:-5]
-                coin = discord.Embed(title=f"{coin_name} ({symbol})")
+                coin = discord.Embed(title=f"{coin_name} ({initial})")
+                coin.set_thumbnail(url=f"{coin_image}")
                 coin.add_field(name="Price:", value=f"{coin_price}")
                 coin.add_field(name="Market Cap:", value=f"{market_cap}")
                 coin.add_field(name="Link:", value=f"{url}")
                 await message.channel.send(embed=coin)
+                print(coin_image)
             except Exception as e:
                 print(e)
                 await message.channel.send(f"@{username} BEEP! BOOP! Cryptocurrency doesnt seem to exist")
