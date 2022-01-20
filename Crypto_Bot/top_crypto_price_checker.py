@@ -1,4 +1,4 @@
-from ast import Try
+import discord
 from bs4 import BeautifulSoup
 import requests
 from time import sleep
@@ -31,12 +31,6 @@ def top_ten_crypto():
         coin_name = name.p.string
         coin_price = price.span.string
         coin_market_cap = str(market_cap).split(">")[3][:-6]
-        print(f"Number: {id}")
-        print(f"---{coin_initial}---")
-        print(f"Name: {coin_name}")
-        print(f"Price: {coin_price}")
-        print(f"Market cap: {coin_market_cap}")
-        print()
         id += 1
 
 
@@ -52,16 +46,11 @@ def top_hundred_crypto():
         currency = str(doc_price).split(">")[1][0]
         coin_price = str(doc_price).split(">")[2][:4]
         #coin_market_cap = str(market_cap).split(">")[3][:-6]
-        print(f"Number: {id}")
-        print(f"---{symbol}---")
-        print(f"Name: {coin_name}")
-        print(f"Price: {currency}{coin_price}")
-        #print(f"Market cap: {coin_market_cap}")
-        print()
         id += 1
 
 
 def all_crypto():
+    all_crypto_names = []
     id = 1
     for page in range(1, num_of_pages + 1):
         url = f"https://coinmarketcap.com/?page={page}"
@@ -78,23 +67,15 @@ def all_crypto():
                 coin_name = str(doc_name).split("span")[3][1:-2]
                 currency = str(doc_price).split(">")[1][0]
                 coin_price = str(doc_price).split(">")[2][:4]
-                print(f"Number: {id}")
-                print(f"---{symbol}---")
-                print(f"Name: {coin_name}")
-                print(f"Price: {currency}{coin_price}")
-                print()
 
             except Exception:
                 coin_initial = str(name).split("class")[9].split(">")[1][:-3]
                 coin_name = name.p.string
                 coin_price = price.span.string
 
-                print(f"Number: {id}")
-                print(f"---{coin_initial}---")
-                print(f"Name: {coin_name}")
-                print(f"Price: {coin_price}")
-                print()
+            all_crypto_names.append(coin_name)
             id += 1
+    return all_crypto_names
 
 
 def random_crypto():
@@ -116,18 +97,10 @@ def random_crypto():
                 currency = str(doc_price).split(">")[1][0]
                 coin_price = str(doc_price).split(">")[2][:4]
 
-                # print(f"---{symbol}---")
-                # print(f"Name: {coin_name}")
-                # print(f"Price: {currency}{coin_price}")
-
             except Exception:
                 coin_initial = str(name).split("class")[9].split(">")[1][:-3]
                 coin_name = name.p.string
                 coin_price = price.span.string
-
-                # print(f"---{coin_initial}---")
-                # print(f"Name: {coin_name}")
-                # print(f"Price: {coin_price}")
 
             try:
                 return f"Name: {coin_name} ({symbol}). Price: {currency}{coin_price}"
@@ -143,14 +116,20 @@ def top_crypto():
         coin_name = name.p.string
         coin_price = price.span.string
         coin_market_cap = str(market_cap).split(">")[3][:-6]
-        # print(f"---{coin_initial}---")
-        # print(f"Name: {coin_name}")
-        # print(f"Price: {coin_price}")
-        # print(f"Market cap: {coin_market_cap}")
-        # print()
 
         return f"Name: {coin_name} ({coin_initial}). Price: {coin_price}. Market cap: {coin_market_cap}"
 
 
-# rand = top_crypto()
-# print(rand)
+def search():
+    crypto = input("Enter: ").lower()
+    url = f"https://coinmarketcap.com/currencies/{crypto}/"
+    result = requests.get(url).text
+    doc = BeautifulSoup(result, "html.parser")
+
+    name = doc.find(class_="sc-1q9q90x-0 jCInrl h1")
+    symbol = str(name).split(">")[2][:-7]
+    price = doc.find(class_="priceValue")
+    market = doc.find(class_="statsValue")
+    coin_name = str(name).split(">")[1].split("<")[0]
+    coin_price = str(price).split("span")[1][1:-2]
+    market_cap = str(market).split(">")[1][:-5]
